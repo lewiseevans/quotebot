@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotebot-deployment
+  namespace: lewis
+  labels:
+    app: quotebot
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: quotebot
+  template:
+    metadata:
+      labels:
+        app: quotebot
+    spec:
+      containers:
+        - name: quotebot
+          image: lewiseevans/quotebot:a665b11e549837adeae49f55476175196dd3a6da
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+          - mountPath: /opt/service-bind
+            name: service-bind-volume
+      volumes:
+      - name: service-bind-volume
+        secret:
+          defaultMode: 420
+          secretName: binding-cloudant-thingsmrsesays
